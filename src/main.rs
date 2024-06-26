@@ -41,7 +41,7 @@ fn main() {
 
 	println!("Starting render...");
 	for j in 0..IMAGE_HEIGHT {
-		println!("Image lines remaining: {:3}", IMAGE_HEIGHT - j);
+		println!("Image rows remaining: {:3}", IMAGE_HEIGHT - j);
 		for i in 0..IMAGE_WIDTH {
 			let ray = camera.get_ray_for_pixel(j, i);
 			let mut color_acc = ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
@@ -69,7 +69,7 @@ fn main() {
 		)
 	);
 
-	println!("Rendering complete, writing to file...");
+	println!("Render complete, writing to file...");
 	let mut file = File::create("image.ppm").unwrap();
 	file.write_all(file_data.as_bytes()).unwrap();
 	println!("Done");
