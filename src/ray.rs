@@ -30,7 +30,7 @@ impl Ray {
 	}
 
 	pub fn cast(self, world: &World, t_min: f64, t_max: f64, depth: u8) -> Color {
-		if depth <= 0 {
+		if depth == 0 {
 			return Color::new_zero();
 		}
 		

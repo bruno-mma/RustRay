@@ -130,7 +130,7 @@ impl Sub for Vec3 {
 }
 
 impl SubAssign for Vec3 {
-	fn sub_assign(&mut self, other: Vec3) -> () {
+	fn sub_assign(&mut self, other: Vec3) {
 		*self = Vec3 {
 			e: [self[0] - other[0], self[1] - other[1], self[2] - other[2]]
 		};
@@ -148,7 +148,7 @@ impl Mul<f64> for Vec3 {
 }
 
 impl MulAssign<f64> for Vec3 {
-	fn mul_assign(&mut self, other: f64) -> () {
+	fn mul_assign(&mut self, other: f64) {
 		*self = Vec3 {
 			e: [self[0] * other, self[1] * other, self[2] * other]
 		};
@@ -176,7 +176,7 @@ impl Div<f64> for Vec3 {
 }
 
 impl DivAssign<f64> for Vec3 {
-	fn div_assign(&mut self, other: f64) -> () {
+	fn div_assign(&mut self, other: f64) {
 		*self = Vec3 {
 			e: [self[0] / other, self[1] / other, self[2] / other]
 		};

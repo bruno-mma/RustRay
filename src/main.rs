@@ -58,15 +58,13 @@ fn main() {
 		}
 	}
 
-	let file_data = String::from(
-		format!(
-			"P3\n{} {}\n255\n{}\n",
-			IMAGE_WIDTH,
-			IMAGE_HEIGHT,
-			pixel_data.iter()
-				.map(|pixel_color| pixel_color.ppm_format_ln())
-				.collect::<String>()
-		)
+	let file_data = format!(
+		"P3\n{} {}\n255\n{}\n",
+		IMAGE_WIDTH,
+		IMAGE_HEIGHT,
+		pixel_data.iter()
+			.map(|pixel_color| pixel_color.ppm_format_ln())
+			.collect::<String>()
 	);
 
 	println!("Render complete, writing to file...");
