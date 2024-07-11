@@ -11,6 +11,8 @@ pub struct Vec3 {
 
 pub type Point3 = Vec3;
 
+const NEAR_ZERO: f64 = 1e-8;
+
 impl Vec3 {
 	pub fn new(e0: f64, e1: f64, e2: f64) -> Vec3 {
 		Vec3 { e: [e0, e1, e2] }
@@ -85,6 +87,10 @@ impl Vec3 {
 	pub fn normalized(&self) -> Vec3 {
 		*self / self.length()
 	}
+
+	pub fn is_near_zero(&self) -> bool {
+		self[0].abs() < NEAR_ZERO && self[1].abs() < NEAR_ZERO && self[2].abs() < NEAR_ZERO
+	}
 }
 
 impl Index<usize> for Vec3 {
@@ -143,6 +149,16 @@ impl Mul<f64> for Vec3 {
 	fn mul(self, other: f64) -> Self::Output {
 		Vec3 {
 			e: [self[0] * other, self[1] * other, self[2] * other]
+		}
+	}
+}
+
+impl Mul<Vec3> for Vec3 {
+	type Output = Vec3;
+
+	fn mul(self, other: Vec3) -> Self::Output {
+		Vec3 {
+			e: [self[0] * other[0], self[1] * other[1], self[2] * other[2]]
 		}
 	}
 }

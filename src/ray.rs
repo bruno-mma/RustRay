@@ -35,11 +35,9 @@ impl Ray {
 		}
 		
 		if let Some(hit_record) = world.hit(self, t_min, t_max) {
-			// let reflection_dir = hit_record.normal.new_rand_normalized_on_hemisphere();
-			let reflection_dir = hit_record.normal + Vec3::new_rand_normalized(); // Lambertian reflectance
-			let reflection_ray = Ray::new(hit_record.hit_point, reflection_dir);
-			
-			return 0.7 * reflection_ray.cast(world, t_min, t_max, depth - 1);
+			if let Some((color, reflection_ray)) = hit_record.material.scatter(&self, &hit_record) {
+				return color * reflection_ray.cast(world, t_min, t_max, depth - 1);
+			}
 		}
 		
 		// did not hit anything, use background color

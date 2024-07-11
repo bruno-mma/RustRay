@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::Write;
 
+use material::Lambertian;
 use rand::Rng;
 
 use camera::Camera;
@@ -18,19 +19,23 @@ mod world;
 mod camera;
 mod material;
 
-const IMAGE_WIDTH: u32 = 1000;
-const IMAGE_HEIGHT: u32 = 800;
+const IMAGE_WIDTH: u32 = 500;
+const IMAGE_HEIGHT: u32 = 400;
 
-const SAMPLES_PER_PIXEL: u8 = 32;
+const SAMPLES_PER_PIXEL: u8 = 8;
 const MAX_DEPTH: u8 = 32;
 
-const T_MIN: f64 = 0.001;
+const T_MIN: f64 = 0.0001;
 const T_MAX: f64 = f64::INFINITY;
 
 fn main() {
 	let mut world = World::new();
-	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.0), 0.5)));
-	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0)));
+	// let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
+	let material_ground = Lambertian::new(Color::new(1.0, 0.0, 0.0));
+	let material_center = Lambertian::new(Color::new(0.0, 1.0, 0.0));
+
+	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.0), 0.5, material_center)));
+	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_ground)));
 
 	let mut pixel_data: Vec<Color> = Vec::with_capacity((IMAGE_WIDTH * IMAGE_HEIGHT) as usize);
 	
@@ -70,5 +75,5 @@ fn main() {
 	println!("Render complete, writing to file...");
 	let mut file = File::create("image.ppm").unwrap();
 	file.write_all(file_data.as_bytes()).unwrap();
-	println!("Done");
+	println!("Done!");
 }
