@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Write;
+use std::time::Instant;
 
 use material::Lambertian;
 use rand::Rng;
@@ -22,20 +23,19 @@ mod material;
 const IMAGE_WIDTH: u32 = 500;
 const IMAGE_HEIGHT: u32 = 400;
 
-const SAMPLES_PER_PIXEL: u8 = 8;
-const MAX_DEPTH: u8 = 32;
+const SAMPLES_PER_PIXEL: u8 = 255;
+const MAX_DEPTH: u8 = 255;
 
-const T_MIN: f64 = 0.0001;
+const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
 fn main() {
+	let material_red = Lambertian::new(Color::new(0.8, 0.1, 0.1));
+	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
+	
 	let mut world = World::new();
-	// let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
-	let material_ground = Lambertian::new(Color::new(1.0, 0.0, 0.0));
-	let material_center = Lambertian::new(Color::new(0.0, 1.0, 0.0));
-
-	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.0), 0.5, material_center)));
-	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_ground)));
+	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.0), 0.5, material_red)));
+	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
 
 	let mut pixel_data: Vec<Color> = Vec::with_capacity((IMAGE_WIDTH * IMAGE_HEIGHT) as usize);
 	
@@ -45,6 +45,8 @@ fn main() {
 	let mut rng = rand::thread_rng();
 
 	println!("Starting render...");
+	let render_start = Instant::now();
+	
 	for j in 0..IMAGE_HEIGHT {
 		println!("Image rows remaining: {:3}", IMAGE_HEIGHT - j);
 		for i in 0..IMAGE_WIDTH {
@@ -63,6 +65,9 @@ fn main() {
 		}
 	}
 
+	let render_duration = render_start.elapsed();
+	println!("Render complete (render time={:?}), writing to file...", render_duration);
+
 	let file_data = format!(
 		"P3\n{} {}\n255\n{}\n",
 		IMAGE_WIDTH,
@@ -72,8 +77,8 @@ fn main() {
 			.collect::<String>()
 	);
 
-	println!("Render complete, writing to file...");
 	let mut file = File::create("image.ppm").unwrap();
 	file.write_all(file_data.as_bytes()).unwrap();
+
 	println!("Done!");
 }

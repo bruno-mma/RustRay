@@ -4,9 +4,9 @@ pub type Color = Vec3;
 
 impl Color {
 	pub fn ppm_format(self) -> String {
-		let r = self.x();
-		let g = self.y();
-		let b = self.z();
+		let r = self[0];
+		let g = self[1];
+		let b = self[2];
 
 		// Apply a linear to gamma transform for gamma 2
 		let r_corrected = linear_to_gamma(r);

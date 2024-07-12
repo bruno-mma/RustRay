@@ -27,14 +27,19 @@ impl Vec3 {
 	}
 
 	pub fn new_rand_range(range: RangeInclusive<f64>) -> Vec3 {
-	    let mut rng = rand::thread_rng();
-	    Vec3 {
-	        e: [
-	            rng.gen_range(range.clone()),
-	            rng.gen_range(range.clone()),
-	            rng.gen_range(range)
-	        ]
-	    }
+		let mut rng = rand::thread_rng();
+		loop {
+			let vec = Vec3 {
+				e: [
+					rng.gen_range(range.clone()),
+					rng.gen_range(range.clone()),
+					rng.gen_range(range.clone())
+				]
+			};
+			if !vec.is_near_zero() {
+				return vec;
+			}
+		}
 	}
 	
 	pub fn new_rand_normalized() -> Vec3 {
@@ -42,7 +47,7 @@ impl Vec3 {
 	}
 	
 	pub fn new_rand_normalized_on_hemisphere(&self) -> Vec3 {
-	    let rand_normalized = Vec3::new_rand_normalized();
+		let rand_normalized = Vec3::new_rand_normalized();
 		if rand_normalized.dot(self) > 0.0 {
 			rand_normalized
 		} else {
@@ -90,6 +95,10 @@ impl Vec3 {
 
 	pub fn is_near_zero(&self) -> bool {
 		self[0].abs() < NEAR_ZERO && self[1].abs() < NEAR_ZERO && self[2].abs() < NEAR_ZERO
+	}
+
+	pub fn reflect(&self, normal: &Vec3) -> Vec3 {
+		todo!();
 	}
 }
 
