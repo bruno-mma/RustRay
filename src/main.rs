@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Write;
+use std::ops::RangeInclusive;
 use std::time::Instant;
 
 use material::Lambertian;
@@ -23,8 +24,11 @@ mod material;
 const IMAGE_WIDTH: u32 = 500;
 const IMAGE_HEIGHT: u32 = 400;
 
-const SAMPLES_PER_PIXEL: u8 = 255;
+const SAMPLES_PER_PIXEL: u32 = 255;
 const MAX_DEPTH: u8 = 255;
+
+const SAMPLE_OFFSET: f64 = 0.5;
+const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;
 
 const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
@@ -54,8 +58,8 @@ fn main() {
 			let mut color_acc = ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
 
 			for _ in 1..SAMPLES_PER_PIXEL {
-				let rnd_v_offset: f64 = rng.gen_range(-0.5..=0.5);
-				let rnd_h_offset: f64 = rng.gen_range(-0.5..=0.5);
+				let rnd_v_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
+				let rnd_h_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
 
 				let ray = camera.get_ray_for_pixel_with_offset(j, rnd_v_offset, i, rnd_h_offset);
 				color_acc += ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
