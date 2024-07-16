@@ -11,6 +11,7 @@ use color::Color;
 use sphere::Sphere;
 use vec3::Point3;
 use world::World;
+use crate::material::Metal;
 
 mod color;
 mod vec3;
@@ -34,11 +35,15 @@ const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
 fn main() {
-	let material_red = Lambertian::new(Color::new(0.8, 0.1, 0.1));
+	let material_blue = Lambertian::new(Color::new(0.1, 0.2, 0.5));
 	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
+	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8));
+	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2));
 	
 	let mut world = World::new();
-	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.0), 0.5, material_red)));
+	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_red_metal)));
+	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
+	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
 
 	let mut pixel_data: Vec<Color> = Vec::with_capacity((IMAGE_WIDTH * IMAGE_HEIGHT) as usize);

@@ -1,6 +1,6 @@
 use std::fmt;
 use std::fmt::Formatter;
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, RangeInclusive, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, RangeInclusive, Sub, SubAssign};
 
 use rand::Rng;
 
@@ -98,7 +98,8 @@ impl Vec3 {
 	}
 
 	pub fn reflect(&self, normal: &Vec3) -> Vec3 {
-		todo!();
+		let b = -(*normal * self.dot(normal));
+		*self + (2.0 * b)
 	}
 }
 
@@ -113,6 +114,16 @@ impl Index<usize> for Vec3 {
 impl IndexMut<usize> for Vec3 {
 	fn index_mut(&mut self, index: usize) -> &mut Self::Output {
 		&mut self.e[index]
+	}
+}
+
+impl Neg for Vec3 {
+	type Output = Vec3;
+
+	fn neg(self) -> Self::Output {
+		Vec3 {
+			e: [-self[0], -self[1], -self[2]]
+		}
 	}
 }
 

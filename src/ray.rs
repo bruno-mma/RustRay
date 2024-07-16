@@ -38,6 +38,7 @@ impl Ray {
 			if let Some((color, reflection_ray)) = hit_record.material.scatter(&self, &hit_record) {
 				return color * reflection_ray.cast(world, t_min, t_max, depth - 1);
 			}
+			unreachable!("Hit scatter did not produce a reflection ray")
 		}
 		
 		// did not hit anything, use background color

@@ -4,7 +4,7 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 
 pub trait Material {
-	fn scatter(&self, ray: &Ray, rec: &HitRecord) -> Option<(Color, Ray)>;
+	fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<(Color, Ray)>;
 }
 
 pub struct Lambertian {
@@ -26,6 +26,28 @@ impl Material for Lambertian {
 			reflection_dir = hit_record.normal;
 		}
 		let reflection_ray = Ray::new(hit_record.hit_point, reflection_dir);
-		Option::Some((self.albedo, reflection_ray))
+		
+		Some((self.albedo, reflection_ray))
+	}
+}
+
+pub struct Metal {
+	albedo: Color,
+}
+
+impl Metal {
+	pub fn new(albedo: Color) -> Metal {
+		Metal {
+			albedo,
+		}
+	}
+}
+
+impl Material for Metal {
+	fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<(Color, Ray)> {
+		let reflection_dir = ray.direction().reflect(&hit_record.normal);
+		let reflection_ray = Ray::new(hit_record.hit_point, reflection_dir);
+		
+		Some((self.albedo, reflection_ray))
 	}
 }

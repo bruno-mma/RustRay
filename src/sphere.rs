@@ -9,6 +9,7 @@ pub struct Sphere<M: Material> {
 	material: M,
 }
 
+// TODO: Use a reference to the material?
 impl<M: Material> Sphere<M> {
 	pub fn new(center: Point3, radius: f64, material: M) -> Sphere<M> {
 		Sphere {
