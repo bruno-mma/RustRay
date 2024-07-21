@@ -5,7 +5,7 @@ use std::time::Instant;
 
 use material::Lambertian;
 use rand::Rng;
-
+use rayon::prelude::*;
 use camera::Camera;
 use color::Color;
 use sphere::Sphere;
@@ -22,10 +22,10 @@ mod world;
 mod camera;
 mod material;
 
-const IMAGE_WIDTH: u32 = 500;
-const IMAGE_HEIGHT: u32 = 400;
+const IMAGE_WIDTH: u32 = 1600;
+const IMAGE_HEIGHT: u32 = 900;
 
-const SAMPLES_PER_PIXEL: u32 = 255;
+const SAMPLES_PER_PIXEL: u32 = 1024;
 const MAX_DEPTH: u8 = 255;
 
 const SAMPLE_OFFSET: f64 = 0.5;
@@ -45,22 +45,19 @@ fn main() {
 	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
 	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
-
-	let mut pixel_data: Vec<Color> = Vec::with_capacity((IMAGE_WIDTH * IMAGE_HEIGHT) as usize);
 	
 	let camera_position = Point3::new_zero();
 	let camera = Camera::new(camera_position, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-	let mut rng = rand::thread_rng();
 
 	println!("Starting render...");
 	let render_start = Instant::now();
-	
-	for j in 0..IMAGE_HEIGHT {
-		println!("Image rows remaining: {:3}", IMAGE_HEIGHT - j);
-		for i in 0..IMAGE_WIDTH {
+
+	let pixel_data: Vec<Color> = (0..IMAGE_HEIGHT).into_par_iter().flat_map(|j| {
+		(0..IMAGE_WIDTH).map(|i| {
 			let ray = camera.get_ray_for_pixel(j, i);
 			let mut color_acc = ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
+			let mut rng = rand::thread_rng();
 
 			for _ in 1..SAMPLES_PER_PIXEL {
 				let rnd_v_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
@@ -69,10 +66,10 @@ fn main() {
 				let ray = camera.get_ray_for_pixel_with_offset(j, rnd_v_offset, i, rnd_h_offset);
 				color_acc += ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
 			}
-
-			pixel_data.push(color_acc / SAMPLES_PER_PIXEL as f64);
-		}
-	}
+			
+			color_acc / SAMPLES_PER_PIXEL as f64
+		}).collect::<Vec<Color>>()
+	}).collect();
 
 	let render_duration = render_start.elapsed();
 	println!("Render complete (render time={:?}), writing to file...", render_duration);

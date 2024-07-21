@@ -20,7 +20,7 @@ impl<M: Material> Sphere<M> {
 	}
 }
 
-impl<M: Material> Hittable for Sphere<M> {
+impl<M: Material+ Sync> Hittable for Sphere<M> {
 	fn hit(&self, ray: Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
 		let oc = self.center - ray.origin();
 		let a = ray.direction().length_squared();
