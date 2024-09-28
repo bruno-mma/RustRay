@@ -37,8 +37,8 @@ const T_MAX: f64 = f64::INFINITY;
 fn main() {
 	let material_blue = Lambertian::new(Color::new(0.1, 0.2, 0.5));
 	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
-	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8));
-	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2));
+	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8), 0.0);
+	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
 	
 	let mut world = World::new();
 	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_red_metal)));
