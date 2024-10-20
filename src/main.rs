@@ -35,6 +35,7 @@ const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;
 const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
+#[allow(clippy::vec_init_then_push)]
 fn main() {
 	let material_blue = Lambertian::new(Color::new(0.1, 0.2, 0.5));
 	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));

@@ -28,7 +28,7 @@ impl Material for Dielectric {
 			self.refraction_index
 		};
 
-		let cos = ray_dir.dot(&n);
+		let cos = ray_dir.dot(&-n);
 		let sin = (1.0 - cos * cos).sqrt();
 
 		let cannot_refract = r * sin > 1.0;
@@ -38,7 +38,7 @@ impl Material for Dielectric {
 			ray_dir.reflect(&n)
 		} else {
 			// refract
-			let r_out_perp = r * (ray_dir - (cos * n));
+			let r_out_perp = r * (ray_dir + (cos * n));
 			let r_out_parallel = -(1.0 - r_out_perp.length_squared()).sqrt() * n;
 
 			r_out_perp + r_out_parallel
