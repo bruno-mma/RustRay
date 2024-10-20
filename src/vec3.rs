@@ -42,12 +42,12 @@ impl Vec3 {
 		}
 	}
 	
-	pub fn new_rand_normalized() -> Vec3 {
+	pub fn new_rand_unit() -> Vec3 {
 		Vec3::new_rand_range(-1.0..=1.0).normalized()
 	}
 	
 	pub fn new_rand_normalized_on_hemisphere(&self) -> Vec3 {
-		let rand_normalized = Vec3::new_rand_normalized();
+		let rand_normalized = Vec3::new_rand_unit();
 		if rand_normalized.dot(self) > 0.0 {
 			rand_normalized
 		} else {

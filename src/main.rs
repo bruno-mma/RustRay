@@ -3,7 +3,6 @@ use std::io::Write;
 use std::ops::RangeInclusive;
 use std::time::Instant;
 
-use material::Lambertian;
 use rand::Rng;
 use rayon::prelude::*;
 use camera::Camera;
@@ -11,7 +10,9 @@ use color::Color;
 use sphere::Sphere;
 use vec3::Point3;
 use world::World;
-use crate::material::Metal;
+use crate::material::dielectric::Dielectric;
+use crate::material::lambertian::Lambertian;
+use crate::material::metal::Metal;
 
 mod color;
 mod vec3;
@@ -39,9 +40,12 @@ fn main() {
 	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
 	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8), 0.0);
 	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
+	let material_glass = Dielectric::new(1.5);
+	let material_bubble = Dielectric::new(1.0 / 1.5);
 	
 	let mut world = World::new();
-	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_red_metal)));
+	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_glass)));
+	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.4, material_bubble)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
 	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
