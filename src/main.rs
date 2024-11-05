@@ -25,6 +25,7 @@ mod material;
 
 const IMAGE_WIDTH: u32 = 1600;
 const IMAGE_HEIGHT: u32 = 900;
+const VERTICAL_FOV: f64 = 90.0;
 
 const SAMPLES_PER_PIXEL: u32 = 1024;
 const MAX_DEPTH: u8 = 255;
@@ -42,17 +43,15 @@ fn main() {
 	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8), 0.0);
 	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
 	let material_glass = Dielectric::new(1.5);
-	let material_bubble = Dielectric::new(1.0 / 1.5);
-	
+
 	let mut world = World::new();
 	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_glass)));
-	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.4, material_bubble)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
 	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
 	
-	let camera_position = Point3::new_zero();
-	let camera = Camera::new(camera_position, IMAGE_WIDTH, IMAGE_HEIGHT);
+	let camera_position = Point3::new(0.0, 0.0, 0.0);
+	let camera = Camera::new(camera_position, IMAGE_WIDTH, IMAGE_HEIGHT, VERTICAL_FOV);
 
 
 	println!("Starting render...");

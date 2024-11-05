@@ -11,8 +11,8 @@ pub struct Camera {
 }
 
 impl Camera {
-	pub fn new(position: Point3, image_width: u32, image_height: u32) -> Camera {
-		let viewport_height = 2.0;
+	pub fn new(position: Point3, image_width: u32, image_height: u32, v_fov: f64) -> Camera {
+		let viewport_height = 2.0 * (v_fov / 2.0).to_radians().tan() * FOCAL_LENGTH;
 		let viewport_width = viewport_height * (image_width as f64 / image_height as f64);
 		
 		let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
