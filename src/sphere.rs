@@ -20,7 +20,7 @@ impl<M: Material> Sphere<M> {
 	}
 }
 
-impl<M: Material+ Sync> Hittable for Sphere<M> {
+impl<M: Material + Sync> Hittable for Sphere<M> {
 	fn hit(&self, ray: Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
 		let oc = self.center - ray.origin();
 		let a = ray.direction().length_squared();
@@ -32,7 +32,7 @@ impl<M: Material+ Sync> Hittable for Sphere<M> {
 			return None;
 		}
 
-		// Find the nearest root that lies in the acceptable range.
+		// Find the nearest root that lies in the acceptable range
 		let sqrt_discriminant = discriminant.sqrt();
 		let mut root = (half_b - sqrt_discriminant) / a;
 		if root <= t_min || root >= t_max {

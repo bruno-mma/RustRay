@@ -3,16 +3,16 @@ use std::io::Write;
 use std::ops::RangeInclusive;
 use std::time::Instant;
 
-use rand::Rng;
-use rayon::prelude::*;
-use camera::Camera;
-use color::Color;
-use sphere::Sphere;
-use vec3::Point3;
-use world::World;
 use crate::material::dielectric::Dielectric;
 use crate::material::lambertian::Lambertian;
 use crate::material::metal::Metal;
+use camera::Camera;
+use color::Color;
+use rand::Rng;
+use rayon::prelude::*;
+use sphere::Sphere;
+use vec3::Point3;
+use world::World;
 
 mod color;
 mod vec3;
@@ -25,7 +25,7 @@ mod material;
 
 const IMAGE_WIDTH: u32 = 1600;
 const IMAGE_HEIGHT: u32 = 900;
-const VERTICAL_FOV: f64 = 90.0;
+const VERTICAL_FOV: f64 = 60.0;
 
 const SAMPLES_PER_PIXEL: u32 = 1024;
 const MAX_DEPTH: u8 = 255;
@@ -41,7 +41,7 @@ fn main() {
 	let material_blue = Lambertian::new(Color::new(0.1, 0.2, 0.5));
 	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
 	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8), 0.0);
-	let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
+	// let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
 	let material_glass = Dielectric::new(1.5);
 
 	let mut world = World::new();

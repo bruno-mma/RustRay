@@ -43,10 +43,24 @@ impl Vec3 {
 	}
 	
 	pub fn new_rand_unit() -> Vec3 {
+		loop {
+			let rand_in_cube = Vec3::new_rand_range(-1.0..=1.0);
+			let rand_length_squared = rand_in_cube.length_squared();
+			
+			// only accept rand candidates that are inside the sphere
+			// otherwise the results would be biased towards the corners of the cube
+			if rand_length_squared <= 1.0 {
+				return rand_in_cube / rand_length_squared.sqrt();
+			}
+		}
+	}
+
+	// results are biased towards the corners of the cube the vectors are initially generated in
+	pub fn new_rand_unit_fast() -> Vec3 {
 		Vec3::new_rand_range(-1.0..=1.0).normalized()
 	}
 	
-	pub fn new_rand_normalized_on_hemisphere(&self) -> Vec3 {
+	pub fn new_rand_unit_on_hemisphere(&self) -> Vec3 {
 		let rand_normalized = Vec3::new_rand_unit();
 		if rand_normalized.dot(self) > 0.0 {
 			rand_normalized
