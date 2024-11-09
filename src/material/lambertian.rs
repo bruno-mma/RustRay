@@ -18,6 +18,7 @@ impl Lambertian {
 
 impl Material for Lambertian {
 	fn scatter(&self, _ray: &Ray, hit_record: &HitRecord) -> Option<(Color, Ray)> {
+		// Could we use a normal distribution to generate the reflection dir for the same results?
 		let mut reflection_dir = hit_record.normal + Vec3::new_rand_unit();
 		if reflection_dir.is_near_zero() {
 			reflection_dir = hit_record.normal;
