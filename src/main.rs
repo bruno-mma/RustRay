@@ -28,7 +28,7 @@ const IMAGE_HEIGHT: u32 = 900;
 const VERTICAL_FOV: f64 = 60.0;
 
 const SAMPLES_PER_PIXEL: u32 = 1024;
-const MAX_DEPTH: u8 = 255;
+const MAX_DEPTH: u8 = 16;
 
 const SAMPLE_OFFSET: f64 = 0.5;
 const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;

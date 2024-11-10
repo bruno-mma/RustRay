@@ -21,6 +21,7 @@ impl Metal {
 impl Material for Metal {
 	fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<(Color, Ray)> {
 		let reflection_dir = ray.direction().reflect(&hit_record.normal);
+		// TODO: could we also lerp the lambertian reflection direction with the perfect reflection to achieve a more natural fuzz?
 		let reflection_dir_fuzzed = reflection_dir.normalized() + (self.fuzz * Vec3::new_rand_unit());
 		let reflection_ray = Ray::new(hit_record.hit_point, reflection_dir_fuzzed);
 
