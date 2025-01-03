@@ -1,8 +1,6 @@
 use crate::ray::Ray;
 use crate::vec3::{Point3, Vec3};
 
-const FOCAL_LENGTH: f64 = 1.0;
-
 pub struct Camera {
 	position: Point3,
 	top_left_pixel: Point3,
