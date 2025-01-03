@@ -23,12 +23,12 @@ mod world;
 mod camera;
 mod material;
 
-const IMAGE_WIDTH: u32 = 1600;
-const IMAGE_HEIGHT: u32 = 900;
+const IMAGE_WIDTH: u32 = 800;
+const IMAGE_HEIGHT: u32 = 400;
 const VERTICAL_FOV: f64 = 60.0;
 
 const SAMPLES_PER_PIXEL: u32 = 1024;
-const MAX_DEPTH: u8 = 16;
+const MAX_DEPTH: u8 = 255;
 
 const SAMPLE_OFFSET: f64 = 0.5;
 const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;
@@ -49,9 +49,11 @@ fn main() {
 	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
 	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
 	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
-	
-	let camera_position = Point3::new(0.0, 0.0, 0.0);
-	let camera = Camera::new(camera_position, IMAGE_WIDTH, IMAGE_HEIGHT, VERTICAL_FOV);
+
+	let cam_position = Point3::new(0.0, 0.0, 0.0);
+	let cam_look_at = Point3::new(0.0, 0.0, 1.0);
+	let cam_up = Point3::new(0.0, 1.0, 0.0);
+	let camera = Camera::new(cam_position, cam_look_at, cam_up, IMAGE_WIDTH, IMAGE_HEIGHT, VERTICAL_FOV);
 
 
 	println!("Starting render...");
@@ -70,7 +72,7 @@ fn main() {
 				let ray = camera.get_ray_for_pixel_with_offset(j, rnd_v_offset, i, rnd_h_offset);
 				color_acc += ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
 			}
-			
+
 			color_acc / SAMPLES_PER_PIXEL as f64
 		}).collect::<Vec<Color>>()
 	}).collect();

@@ -41,12 +41,12 @@ impl Vec3 {
 			}
 		}
 	}
-	
+
 	pub fn new_rand_unit() -> Vec3 {
 		loop {
 			let rand_in_cube = Vec3::new_rand_range(-1.0..=1.0);
 			let rand_length_squared = rand_in_cube.length_squared();
-			
+
 			// only accept rand candidates that are inside the sphere
 			// otherwise the results would be biased towards the corners of the cube
 			if rand_length_squared <= 1.0 {
@@ -59,7 +59,7 @@ impl Vec3 {
 	pub fn new_rand_unit_fast() -> Vec3 {
 		Vec3::new_rand_range(-1.0..=1.0).normalized()
 	}
-	
+
 	pub fn new_rand_unit_on_hemisphere(&self) -> Vec3 {
 		let rand_normalized = Vec3::new_rand_unit();
 		if rand_normalized.dot(self) > 0.0 {
@@ -84,7 +84,7 @@ impl Vec3 {
 	pub fn dot(&self, other: &Vec3) -> f64 {
 		self[0] * other[0] + self[1] * other[1] + self[2] * other[2]
 	}
-	
+
 	pub fn length_squared(&self) -> f64 {
 		self.dot(self)
 	}
@@ -102,7 +102,7 @@ impl Vec3 {
 			]
 		}
 	}
-	
+
 	pub fn normalized(&self) -> Vec3 {
 		*self / self.length()
 	}
