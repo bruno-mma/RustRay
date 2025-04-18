@@ -10,7 +10,7 @@ pub struct HitRecord<'a> {
 	pub material: &'a dyn Material,
 }
 
-impl<'a> HitRecord<'a> {
+impl HitRecord<'_> {
 	pub fn new(hit_point: Point3, normal: Vec3, t: f64, front_face: bool, material: &dyn Material) -> HitRecord {
 		HitRecord {
 			hit_point,

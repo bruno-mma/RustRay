@@ -23,12 +23,12 @@ mod world;
 mod camera;
 mod material;
 
-const IMAGE_WIDTH: u32 = 800;
-const IMAGE_HEIGHT: u32 = 400;
-const VERTICAL_FOV: f64 = 60.0;
+const IMAGE_WIDTH: u32 = 1200;
+const IMAGE_HEIGHT: u32 = 800;
+const VERTICAL_FOV: f64 = 20.0;
 
-const SAMPLES_PER_PIXEL: u32 = 1024;
-const MAX_DEPTH: u8 = 255;
+const SAMPLES_PER_PIXEL: u32 = 512;
+const MAX_DEPTH: u8 = 32;
 
 const SAMPLE_OFFSET: f64 = 0.5;
 const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;
@@ -37,21 +37,64 @@ const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
 #[allow(clippy::vec_init_then_push)]
-fn main() {
-	let material_blue = Lambertian::new(Color::new(0.1, 0.2, 0.5));
-	let material_green = Lambertian::new(Color::new(0.8, 0.8, 0.0));
-	let material_gray_metal = Metal::new(Color::new(0.8, 0.8, 0.8), 0.0);
-	// let material_red_metal = Metal::new(Color::new(0.8, 0.6, 0.2), 0.3);
-	let material_glass = Dielectric::new(1.5);
-
+fn gen_world() -> World {
 	let mut world = World::new();
-	world.push(Box::new(Sphere::new(Point3::new(1.0, 0.0, 1.0), 0.5, material_glass)));
-	world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, 1.2), 0.5, material_blue)));
-	world.push(Box::new(Sphere::new(Point3::new(-1.0, 0.0, 1.0), 0.5, material_gray_metal)));
-	world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, 1.0), 100.0, material_green)));
 
-	let cam_position = Point3::new(0.0, 0.0, 0.0);
-	let cam_look_at = Point3::new(0.0, 0.0, 1.0);
+	let ground_material = Lambertian::new(Color::new(0.6, 0.6, 0.6));
+	world.push(Box::new(Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, ground_material)));
+
+	let mat_1 = Dielectric::new(1.5);
+	world.push(Box::new(Sphere::new(Point3::new(0.0, 1.0, 0.0), 1.0, mat_1)));
+
+	let mat_2 = Lambertian::new(Color::new(0.2, 0.2, 0.8));
+	world.push(Box::new(Sphere::new(Point3::new(-4.0, 1.0, 0.0), 1.0, mat_2)));
+
+	let mat_3 = Metal::new(Color::new(0.7, 0.6, 0.5), 0.0);
+	world.push(Box::new(Sphere::new(Point3::new(4.0, 1.0, 0.0), 1.0, mat_3)));
+
+	let mut rng =  rand::thread_rng();
+
+	for a in -11..=11 {
+		for b in -11..=11 {
+			if  a < 5 && a > -5 && b < 2 && b > -2 {
+				continue;
+			}
+
+			let center = Point3::new(
+				a as f64 + 0.9 * rng.gen_range(0.0..=1.0),
+				0.2,
+				b as f64 + 0.9 * rng.gen_range(0.0..=1.0)
+			);
+
+			let mat_float = rng.gen_range(0.0..=1.0);
+			match mat_float {
+				x if x < 0.8 => {
+					let albedo = Color::new_rand_range(0.0..=1.0);
+					let mat = Lambertian::new(albedo);
+					world.push(Box::new(Sphere::new(center, 0.2, mat)));
+				},
+				x if x < 0.95 => {
+					let albedo = Color::new_rand_range(0.5..=1.0);
+					let fuzz = rng.gen_range(0.0..=0.1);
+					let mat = Metal::new(albedo, fuzz);
+					world.push(Box::new(Sphere::new(center, 0.2, mat)));
+				},
+				_ => {
+					let mat = Dielectric::new(1.5);
+					world.push(Box::new(Sphere::new(center, 0.2, mat)));
+				},
+			};
+		}
+	}
+
+	world
+}
+
+fn main() {
+	let world = gen_world();
+
+	let cam_position = Point3::new(13.0, 2.0, -3.0);
+	let cam_look_at = Point3::new(0.0, 0.0, 0.0);
 	let cam_up = Point3::new(0.0, 1.0, 0.0);
 	let camera = Camera::new(cam_position, cam_look_at, cam_up, IMAGE_WIDTH, IMAGE_HEIGHT, VERTICAL_FOV);
 

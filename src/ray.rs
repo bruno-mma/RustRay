@@ -16,15 +16,15 @@ impl Ray {
 			direction
 		}
 	}
-	
+
 	pub fn at(self, t: f64) -> Point3 {
 		self.origin + (self.direction * t)
 	}
-	
+
 	pub fn origin(self) -> Point3 {
 		self.origin
 	}
-	
+
 	pub fn direction(self) -> Vec3 {
 		self.direction
 	}
@@ -33,16 +33,16 @@ impl Ray {
 		if depth == 0 {
 			return Color::new_zero();
 		}
-		
+
 		if let Some(hit_record) = world.hit(self, t_min, t_max) {
 			if let Some((color, reflection_ray)) = hit_record.material.scatter(&self, &hit_record) {
 				return color * reflection_ray.cast(world, t_min, t_max, depth - 1);
 			}
 			unreachable!("Hit scatter did not produce a reflection ray")
 		}
-		
+
 		// did not hit anything, use background color
-		
+
 		// blended Value = (1 − a) * startValue + a * endValue, 0.0 <= a <= 1.0
 		let dir_normalized = self.direction().normalized();
 		let a = 0.5 * (dir_normalized.y() + 1.0);
