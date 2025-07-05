@@ -55,11 +55,6 @@ impl Vec3 {
 		}
 	}
 
-	// results are biased towards the corners of the cube the vectors are initially generated in
-	pub fn new_rand_unit_fast() -> Vec3 {
-		Vec3::new_rand_range(-1.0..=1.0).normalized()
-	}
-
 	pub fn new_rand_unit_on_hemisphere(&self) -> Vec3 {
 		let rand_normalized = Vec3::new_rand_unit();
 		if rand_normalized.dot(self) > 0.0 {

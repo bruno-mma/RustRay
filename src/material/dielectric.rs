@@ -32,8 +32,7 @@ impl Material for Dielectric {
 		let sin = (1.0 - cos * cos).sqrt();
 
 		let cannot_refract = r * sin > 1.0;
-		let ray_out_dir=
-		if cannot_refract || reflectance(cos, r) > rand::random::<f64>() {
+		let ray_out_dir= if cannot_refract || reflectance(cos, r) > rand::random::<f64>() {
 			// reflect
 			ray_dir.reflect(&n)
 		} else {
