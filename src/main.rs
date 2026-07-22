@@ -22,6 +22,7 @@ mod sphere;
 mod world;
 mod camera;
 mod material;
+mod aabb;
 
 const IMAGE_WIDTH: u32 = 1200;
 const IMAGE_HEIGHT: u32 = 800;
