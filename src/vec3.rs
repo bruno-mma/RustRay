@@ -28,26 +28,24 @@ impl Vec3 {
 
 	pub fn new_rand_range(range: RangeInclusive<f64>) -> Vec3 {
 		let mut rng = rand::thread_rng();
-		loop {
-			let vec = Vec3 {
-				e: [
-					rng.gen_range(range.clone()),
-					rng.gen_range(range.clone()),
-					rng.gen_range(range.clone())
-				]
-			};
-			if !vec.is_near_zero() {
-				return vec;
-			}
+		Vec3 {
+			e: [
+				rng.gen_range(range.clone()),
+				rng.gen_range(range.clone()),
+				rng.gen_range(range)
+			]
 		}
 	}
 
 	pub fn new_rand_unit() -> Vec3 {
 		loop {
 			let rand_in_cube = Vec3::new_rand_range(-1.0..=1.0);
-			let rand_length_squared = rand_in_cube.length_squared();
+			if rand_in_cube.is_near_zero() {
+				continue;
+			}
 
-			// only accept rand candidates that are inside the sphere
+			let rand_length_squared = rand_in_cube.length_squared();
+			// only accept rand candidates that are inside a unit sphere
 			// otherwise the results would be biased towards the corners of the cube
 			if rand_length_squared <= 1.0 {
 				return rand_in_cube / rand_length_squared.sqrt();

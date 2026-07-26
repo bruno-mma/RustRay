@@ -36,7 +36,6 @@ const SAMPLE_OFFSET_RANGE: RangeInclusive<f64> = -SAMPLE_OFFSET..=SAMPLE_OFFSET;
 const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
-#[allow(clippy::vec_init_then_push)]
 fn gen_world() -> World {
 	let mut world = World::new();
 
@@ -97,7 +96,6 @@ fn main() {
 	let cam_look_at = Point3::new(0.0, 0.0, 0.0);
 	let cam_up = Point3::new(0.0, 1.0, 0.0);
 	let camera = Camera::new(cam_position, cam_look_at, cam_up, IMAGE_WIDTH, IMAGE_HEIGHT, VERTICAL_FOV);
-
 
 	println!("Starting render...");
 	let render_start = Instant::now();

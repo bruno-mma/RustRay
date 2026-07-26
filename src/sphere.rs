@@ -15,7 +15,7 @@ impl<M: Material> Sphere<M> {
 		Sphere {
 			center,
 			radius,
-    		material,
+			material,
 		}
 	}
 }
