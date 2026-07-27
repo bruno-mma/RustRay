@@ -31,7 +31,8 @@ pub fn linear_to_gamma(linear_component: f64) -> f64 {
 		linear_component.sqrt()
 	} else {
 		cold_path();
-		println!("Warning: negative color component encountered: {}", linear_component);
+		#[cfg(debug_assertions)]
+		eprintln!("Warning: negative color component encountered: {}", linear_component);
 		0.0
 	}
 }
