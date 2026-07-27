@@ -102,11 +102,10 @@ fn main() {
 
 	let pixel_data: Vec<Color> = (0..IMAGE_HEIGHT).into_par_iter().flat_map(|j| {
 		(0..IMAGE_WIDTH).map(|i| {
-			let ray = camera.get_ray_for_pixel(j, i);
-			let mut color_acc = ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
+			let mut color_acc = Color::new_zero();
 			let mut rng = rand::thread_rng();
 
-			for _ in 1..SAMPLES_PER_PIXEL {
+			for _ in 0..SAMPLES_PER_PIXEL {
 				let rnd_v_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
 				let rnd_h_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
 
