@@ -1,6 +1,6 @@
 # RustRay
 
-A simple raytracer written in Rust. Heavily inspired in the [Ray Tracing in One Weekend](https://github.com/RayTracing/raytracing.github.io) book series.
+A simple ray tracer written in Rust. Heavily inspired by the [Ray Tracing in One Weekend](https://github.com/RayTracing/raytracing.github.io) book series.
 
 ![Example render][example]
 
