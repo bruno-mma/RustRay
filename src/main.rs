@@ -9,7 +9,6 @@ use crate::material::metal::Metal;
 use camera::Camera;
 use color::Color;
 use rand::Rng;
-use rayon::prelude::*;
 use sphere::Sphere;
 use vec3::Point3;
 use world::World;
@@ -100,22 +99,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 	println!("Starting render...");
 	let render_start = Instant::now();
 
-	let pixel_data: Vec<Color> = (0..IMAGE_HEIGHT).into_par_iter().flat_map(|j| {
-		(0..IMAGE_WIDTH).map(|i| {
-			let mut color_acc = Color::new_zero();
-			let mut rng = rand::thread_rng();
-
-			for _ in 0..SAMPLES_PER_PIXEL {
-				let rnd_v_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
-				let rnd_h_offset: f64 = rng.gen_range(SAMPLE_OFFSET_RANGE);
-
-				let ray = camera.get_ray_for_pixel_with_offset(j, rnd_v_offset, i, rnd_h_offset);
-				color_acc += ray.cast(&world, T_MIN, T_MAX, MAX_DEPTH);
-			}
-
-			color_acc / SAMPLES_PER_PIXEL as f64
-		}).collect::<Vec<Color>>()
-	}).collect();
+	let pixel_data: Vec<Color> = camera.render(&world);
 
 	let render_duration = render_start.elapsed();
 	println!("Render complete (render time={:?}), writing to file...", render_duration);
