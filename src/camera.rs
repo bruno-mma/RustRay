@@ -39,7 +39,7 @@ impl Camera {
 		Camera {
 			position,
 			top_left_pixel,
-			pixel_delta_h, 
+			pixel_delta_h,
 			pixel_delta_v,
 			image_width,
 			image_height,
@@ -62,7 +62,7 @@ impl Camera {
 
 	pub fn render(&self, world: &World) -> Vec<Color> {
 		(0..self.image_height).into_par_iter().flat_map(|j| {
-			(0..self.image_width).map(|i| {
+			(0..self.image_width).into_par_iter().map(move |i| {
 				let mut color_acc = Color::new_zero();
 				// FIXME: avoid creating a thread_rng for each pixel
 				let mut rng = rand::thread_rng();
@@ -76,7 +76,7 @@ impl Camera {
 				}
 
 				color_acc / SAMPLES_PER_PIXEL as f64
-			}).collect::<Vec<Color>>()
+			})
 		}).collect()
 	}
 }
