@@ -89,7 +89,7 @@ fn gen_world() -> World {
 	world
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let world = gen_world();
 
 	let cam_position = Point3::new(13.0, 2.0, -3.0);
@@ -129,8 +129,9 @@ fn main() {
 			.collect::<String>()
 	);
 
-	let mut file = File::create("image.ppm").unwrap();
-	file.write_all(file_data.as_bytes()).unwrap();
+	let mut file = File::create("image.ppm")?;
+	file.write_all(file_data.as_bytes())?;
 
 	println!("Done!");
+	Ok(())
 }
