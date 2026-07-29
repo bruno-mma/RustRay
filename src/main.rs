@@ -30,7 +30,7 @@ const T_MIN: f64 = 0.001;
 const T_MAX: f64 = f64::INFINITY;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-	let world = world::gen_world();
+	let world = world::gen_world_big();
 
 	let cam_position = Point3::new(13.0, 2.0, -3.0);
 	let cam_look_at = Point3::new(0.0, 0.0, 0.0);
