@@ -1,38 +1,23 @@
 use crate::vec3::Vec3;
-use std::hint::cold_path;
+use std::io::{self, Write};
 
 pub type Color = Vec3;
 
 impl Color {
-	pub fn ppm_format(self) -> String {
-		let r = self[0];
-		let g = self[1];
-		let b = self[2];
-
-		// Apply a linear to gamma transform for gamma 2
-		let r_corrected = linear_to_gamma(r);
-		let g_corrected = linear_to_gamma(g);
-		let b_corrected = linear_to_gamma(b);
-
-		format!("{} {} {}",
-		        (255.999999 * r_corrected) as u8,
-		        (255.999999 * g_corrected) as u8,
-		        (255.999999 * b_corrected) as u8
+	pub fn write_ppm<W: Write>(&self, writer: &mut W) -> io::Result<()> {
+		let r = linear_to_gamma(self[0]) * 256.0;
+		let g = linear_to_gamma(self[1]) * 256.0;
+		let b = linear_to_gamma(self[2]) * 256.0;
+		writeln!(
+			writer,
+			"{} {} {}",
+			r as u8,
+			g as u8,
+			b as u8
 		)
-	}
-
-	pub fn ppm_format_ln(self) -> String {
-		format!("{}\n", self.ppm_format())
 	}
 }
 
 pub fn linear_to_gamma(linear_component: f64) -> f64 {
-	if linear_component >= 0.0 {
-		linear_component.sqrt()
-	} else {
-		cold_path();
-		#[cfg(debug_assertions)]
-		eprintln!("Warning: negative color component encountered: {}", linear_component);
-		0.0
-	}
+	linear_component.clamp(0.0, 0.999999).sqrt()
 }

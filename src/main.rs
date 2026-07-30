@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::Write;
+use std::io::{BufWriter, Write};
 use std::ops::RangeInclusive;
 use std::time::Instant;
 
@@ -45,17 +45,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let render_duration = render_start.elapsed();
 	println!("Render complete (render time={:?}), writing to file...", render_duration);
 
-	let file_data = format!(
-		"P3\n{} {}\n255\n{}\n",
-		IMAGE_WIDTH,
-		IMAGE_HEIGHT,
-		pixel_data.iter()
-			.map(|pixel_color| pixel_color.ppm_format_ln())
-			.collect::<String>()
-	);
+	let mut file_writer = BufWriter::new(File::create("image.ppm")?);
 
-	let mut file = File::create("image.ppm")?;
-	file.write_all(file_data.as_bytes())?;
+	write!(
+		file_writer,
+		"P3\n{} {}\n255\n",
+		IMAGE_WIDTH,
+		IMAGE_HEIGHT
+	)?;
+
+	for pixel in pixel_data {
+		pixel.write_ppm(&mut file_writer)?;
+	}
+	file_writer.flush()?;
 
 	println!("Done!");
 	Ok(())
